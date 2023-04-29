@@ -1,6 +1,6 @@
 from django.urls import path
 from rest_framework.routers import DefaultRouter
-from .views import Product
+from .views import Product,CommentViewSet,TagViewSet,PurchaseView
 # from .views import ProductListView, ProductCreateView, ProductUpdateView, ProductDeleteView
 
 # urlpatterns = [
@@ -12,5 +12,8 @@ from .views import Product
 
 
 router = DefaultRouter()
-router.register('product', Product, 'product')
+router.register('product', Product, 'product'),
+router.register('comment', CommentViewSet, 'comments'),
+router.register('tags', TagViewSet, 'tags'),
+router.register(r'purchase', PurchaseView, basename='purchase')
 urlpatterns = router.urls
