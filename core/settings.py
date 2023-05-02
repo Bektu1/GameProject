@@ -45,13 +45,12 @@ INSTALLED_APPS = [
     'djoser',
     "corsheaders",
     'social_django',
-    
     'django.contrib.sites',
+
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
-
+    'allauth.socialaccount.providers.vk',
 
     # my apps
     'app.users',
@@ -85,26 +84,23 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 
-                'social_django.context_processors.backends',  
-                'social_django.context_processors.login_redirect',
+                'django.template.context_processors.request',
             ],
         },
     },
 ]
 
 AUTHENTICATION_BACKENDS = (
-    'social_core.backends.facebook.FacebookOAuth2',
-    'social_core.backends.twitter.TwitterOAuth',
-    'social_core.backends.github.GithubOAuth2',
-
     'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
+    'allauth.account.auth_backends.AuthenticationBackend'
+    # 'social.backends.facebook.Facebook2OAuth2',
+
 )
 
 SITE_ID = 1
-
 LOGIN_REDIRECT_URL = '/'
-
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
+ACCOUNT_USERNAME_MIN_LINGTH = 6
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
@@ -171,13 +167,29 @@ LOGIN_REDIRECT_URL = 'home'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': [
+#         'rest_framework.authentication.TokenAuthentication'
+#     ], # классы используемые для логина
+#     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination', # пагинация - постраничное отображение данных
+#     'PAGE_SIZE': 2, # количество объектов на странице
+#     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'], # класс используемый для фильтрации
+# }
+
+
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication'
-    ], # классы используемые для логина
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination', # пагинация - постраничное отображение данных
-    'PAGE_SIZE': 2, # количество объектов на странице
-    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'], # класс используемый для фильтрации
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'allauth.account.auth_backends.AuthenticationBackend',
+    ),
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.SearchFilter',
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 3,
 }
 
 # https://django-rest-framework-simplejwt.readthedocs.io/en/latest/
@@ -221,15 +233,23 @@ SWAGGER_SETTINGS = {
 }
 
 
+SITE_ID = 1
+LOGIN_REDIRECT_URL = '/'
+
+
 SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'SCOPE': [
-            'profile',
-            'email',
-        ],
-        'AUTH_PARAMS': {
-            'access_type': 'online',
-        }
+    'VK': {
+        'SCOPE': ['email'],
+        'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+        'METHOD': 'oauth2',
+        'VERSION': '5.131',
+        'APP': {
+            'client_id': '51632636',
+            'secret': '0OKvASpMVttQzCqQtqz7',
+            'key': ''
+        },
+        'EXCHANGE_TOKEN': True,
+        'LOCALE_FUNC': lambda request: 'ru',
     }
 }
 

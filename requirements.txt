@@ -18,3 +18,4 @@ django-cors-headers
 # для генерации slug
 python-slugify
 slugify
+pipenv

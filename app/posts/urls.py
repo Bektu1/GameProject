@@ -7,5 +7,5 @@ router = DefaultRouter()
 router.register('product', Product, 'product')
 router.register('comment', CommentViewSet, 'comments'),
 router.register('tags', TagViewSet, 'tags'),
-router.register(r'purchase', PurchaseView, basename='purchase')
+router.register('purchase', PurchaseView, basename='purchase')
 urlpatterns = router.urls

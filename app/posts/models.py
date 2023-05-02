@@ -18,8 +18,8 @@ class Product(models.Model):
   
     
     class Meta:
-        verbose_name = 'Товар'
-        verbose_name_plural = 'Товары'
+        verbose_name = 'Продукт'
+        verbose_name_plural = 'Продукты'
         ordering = ['created_at']
 
     def __str__(self):
