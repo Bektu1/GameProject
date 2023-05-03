@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     # my apps
     'app.users',
     'app.posts', 
+    'app.tkinter_app',
     
 ]
 
