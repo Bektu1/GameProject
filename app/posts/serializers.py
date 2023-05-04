@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Product
 from .models import Product,Like,Comment,Tag,Purchase
+from .models import Favorite
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -60,3 +61,11 @@ class PurchaseSerializer(serializers.ModelSerializer):
         model =Purchase
         fields = '__all__'
 
+
+class FavoriteSerializer(serializers.ModelSerializer):
+    is_favorite = serializers.BooleanField(read_only=True)
+
+
+    class Meta:
+        model = Favorite
+        fields = '__all__'

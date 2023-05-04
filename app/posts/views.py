@@ -3,9 +3,9 @@ from .models import Product
 from rest_framework import viewsets
 from .serializers import ProductSerializer
 from rest_framework import mixins, permissions, viewsets
-from .models import Product,Like,Comment,Tag,Purchase
+from .models import Product,Like,Comment,Tag,Purchase, Favorite
 from rest_framework import viewsets,permissions
-from .serializers import ProductSerializer,CommentSerializer,TagSerializer,PurchaseSerializer
+from .serializers import ProductSerializer,CommentSerializer,TagSerializer,PurchaseSerializer, FavoriteSerializer
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
@@ -14,6 +14,7 @@ from .permissions import IsAuthor
 from rest_framework.pagination import LimitOffsetPagination
 from django.db.utils import IntegrityError
 from django.shortcuts import get_object_or_404
+
 
 
 
@@ -99,6 +100,15 @@ class PurchaseView(ModelViewSet):
         paginated_queryset = self.paginate_queryset(queryset, request)
         serializer = PurchaseSerializer(paginated_queryset, many=True)
         return self.get_paginated_response(serializer.data)
+    
+
+class FavoriteViewSet(ModelViewSet):
+    serializer_class = FavoriteSerializer
+
+    def get_queryset(self):
+        queryset = Favorite.objects.all()
+        queryset = self.annotate_qs_is_favorite_field(queryset)
+        return queryset
 
 
 
